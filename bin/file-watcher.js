@@ -2,9 +2,12 @@ const chokidar = require('chokidar');
 
 const paths = JSON.parse(process.argv[2]);
 
-const watcher = chokidar.watch(paths, {
+const params = JSON.parse(process.argv[3]);
+
+/*const watcher = chokidar.watch(paths, {
     ignoreInitial: true,
-});
+});*/
+const watcher = chokidar.watch(paths, params);
 
 watcher
     .on('add', path => console.log(`fileCreated - ${path}`))

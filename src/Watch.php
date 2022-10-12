@@ -7,6 +7,7 @@ use Spatie\Watcher\Exceptions\CouldNotStartWatcher;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
+
 class Watch
 {
     const EVENT_TYPE_FILE_CREATED = 'fileCreated';
@@ -17,6 +18,7 @@ class Watch
     protected int $interval = 500 * 1000;
 
     protected array $paths = [];
+    protected array $parameters = [ 'ignoreInitial' => true ];
 
     /** @var callable[] */
     protected array $onFileCreated = [];
@@ -64,6 +66,18 @@ class Watch
         return $this;
     }
 
+    /**
+     * Expects chokidar params structure. 'ignoreInitial' true by default.
+     */
+    public function setParameters( array $params ): self
+    {
+        if(!array_key_exists('ignoreInitial', $params)) array_merge($params, ['ignoreInitial' => true]);
+
+        $this->parameters = $params;
+
+        return $this;
+    }
+
     public function onFileCreated(callable $onFileCreated): self
     {
         $this->onFileCreated[] = $onFileCreated;
@@ -105,7 +119,7 @@ class Watch
 
         return $this;
     }
-    
+
     public function setIntervalTime(int $interval): self
     {
         $this->interval = $interval;
@@ -147,6 +161,7 @@ class Watch
             (new ExecutableFinder)->find('node'),
             realpath(__DIR__ . '/../bin/file-watcher.js'),
             json_encode($this->paths),
+            json_encode($this->parameters),
         ];
 
         $process = new Process(
