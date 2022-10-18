@@ -10,8 +10,8 @@ const params = JSON.parse(process.argv[3]);
 const watcher = chokidar.watch(paths, params);
 
 watcher
-    .on('add', path => console.log(`fileCreated - ${path}`))
-    .on('change', path => console.log(`fileUpdated - ${path}`))
-    .on('unlink', path => console.log(`fileDeleted - ${path}`))
-    .on('addDir', path => console.log(`directoryCreated - ${path}`))
-    .on('unlinkDir', path => console.log(`directoryDeleted - ${path}`))
+    .on('add', (path, stat) => console.log(`fileCreated - ${path} - ${JSON.stringify(stat)}`))
+    .on('change', (path, stat) => console.log(`fileUpdated - ${path} - ${JSON.stringify(stat)}`))
+    .on('unlink', path => console.log(`fileDeleted - ${path} - ${JSON.stringify([])}`))
+    .on('addDir', (path, stat) => console.log(`directoryCreated - ${path} - ${JSON.stringify(stat)}`))
+    .on('unlinkDir', path => console.log(`directoryDeleted - ${path} - ${JSON.stringify([])}`))

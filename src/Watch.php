@@ -181,16 +181,17 @@ class Watch
         $lines = array_filter($lines);
 
         foreach ($lines as $line) {
-            [$type, $path] = explode(' - ', $line, 2);
+            [$type, $path, $stats] = explode(' - ', $line, 3);
+            $stats = json_decode($stats, true);
 
             $path = trim($path);
 
             match ($type) {
-                static::EVENT_TYPE_FILE_CREATED => $this->callAll($this->onFileCreated, $path),
-                static::EVENT_TYPE_FILE_UPDATED => $this->callAll($this->onFileUpdated, $path),
-                static::EVENT_TYPE_FILE_DELETED => $this->callAll($this->onFileDeleted, $path),
-                static::EVENT_TYPE_DIRECTORY_CREATED => $this->callAll($this->onDirectoryCreated, $path),
-                static::EVENT_TYPE_DIRECTORY_DELETED => $this->callAll($this->onDirectoryDeleted, $path),
+                static::EVENT_TYPE_FILE_CREATED => $this->callAll($this->onFileCreated, $path, $stats),
+                static::EVENT_TYPE_FILE_UPDATED => $this->callAll($this->onFileUpdated, $path, $stats),
+                static::EVENT_TYPE_FILE_DELETED => $this->callAll($this->onFileDeleted, $path, $stats),
+                static::EVENT_TYPE_DIRECTORY_CREATED => $this->callAll($this->onDirectoryCreated, $path, $stats),
+                static::EVENT_TYPE_DIRECTORY_DELETED => $this->callAll($this->onDirectoryDeleted, $path, $stats),
             };
 
             foreach ($this->onAny as $onAnyCallable) {
@@ -199,10 +200,10 @@ class Watch
         }
     }
 
-    protected function callAll(array $callables, string $path): void
+    protected function callAll(array $callables, string $path, array $stats): void
     {
         foreach ($callables as $callable) {
-            $callable($path);
+            $callable($path, $stats);
         }
     }
 }
