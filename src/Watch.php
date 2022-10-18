@@ -181,7 +181,7 @@ class Watch
         $lines = array_filter($lines);
 
         foreach ($lines as $line) {
-            [$type, $path, $stats] = explode(' - ', $line, 3);
+            [$type, $path, $stats] = explode(' ||| ', $line, 3);
             $stats = json_decode($stats, true);
 
             $path = trim($path);
