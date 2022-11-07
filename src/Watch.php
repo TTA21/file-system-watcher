@@ -183,6 +183,7 @@ class Watch
         foreach ($lines as $line) {
             [$type, $path, $stats] = explode(' ||| ', $line, 3);
             $stats = json_decode($stats, true);
+            if(is_null($stats)) $stats = [];
 
             $path = trim($path);
 
