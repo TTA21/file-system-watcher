@@ -181,11 +181,10 @@ class Watch
         $lines = array_filter($lines);
 
         foreach ($lines as $line) {
-            [$type, $path, $stats] = explode(' ||| ', $line, 3);
-            $stats = json_decode($stats, true);
-            if(is_null($stats)) $stats = [];
-
-            $path = trim($path);
+            $data = json_decode($line, true);
+            $type = $data['type'];
+            $path = trim($data['path']);
+            $stats = $data['stats'];
 
             match ($type) {
                 static::EVENT_TYPE_FILE_CREATED => $this->callAll($this->onFileCreated, $path, $stats),
