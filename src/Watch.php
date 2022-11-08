@@ -182,20 +182,22 @@ class Watch
 
         foreach ($lines as $line) {
             $data = json_decode($line, true);
-            $type = $data['type'];
-            $path = trim($data['path']);
-            $stats = $data['stats'];
+            if(!is_null($data)){
+                $type = $data['type'];
+                $path = trim($data['path']);
+                $stats = $data['stats'];
 
-            match ($type) {
-                static::EVENT_TYPE_FILE_CREATED => $this->callAll($this->onFileCreated, $path, $stats),
-                static::EVENT_TYPE_FILE_UPDATED => $this->callAll($this->onFileUpdated, $path, $stats),
-                static::EVENT_TYPE_FILE_DELETED => $this->callAll($this->onFileDeleted, $path, $stats),
-                static::EVENT_TYPE_DIRECTORY_CREATED => $this->callAll($this->onDirectoryCreated, $path, $stats),
-                static::EVENT_TYPE_DIRECTORY_DELETED => $this->callAll($this->onDirectoryDeleted, $path, $stats),
-            };
+                match ($type) {
+                    static::EVENT_TYPE_FILE_CREATED => $this->callAll($this->onFileCreated, $path, $stats),
+                    static::EVENT_TYPE_FILE_UPDATED => $this->callAll($this->onFileUpdated, $path, $stats),
+                    static::EVENT_TYPE_FILE_DELETED => $this->callAll($this->onFileDeleted, $path, $stats),
+                    static::EVENT_TYPE_DIRECTORY_CREATED => $this->callAll($this->onDirectoryCreated, $path, $stats),
+                    static::EVENT_TYPE_DIRECTORY_DELETED => $this->callAll($this->onDirectoryDeleted, $path, $stats),
+                };
 
-            foreach ($this->onAny as $onAnyCallable) {
-                $onAnyCallable($type, $path);
+                foreach ($this->onAny as $onAnyCallable) {
+                    $onAnyCallable($type, $path);
+                }
             }
         }
     }
