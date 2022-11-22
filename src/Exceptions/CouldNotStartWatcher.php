@@ -9,6 +9,6 @@ class CouldNotStartWatcher extends Exception
 {
     public static function make(Process $watcher): self
     {
-        return new self("Could not start watcher. Make sure you have required chokidar. Error output: " . $watcher->getErrorOutput());
+        return new self("Could not start watcher. Make sure you have required chokidar. Error output: " . $watcher->getErrorOutput() . " :: Output: " . $watcher->getOutput());
     }
 }
