@@ -59,8 +59,6 @@ class Watch
     {
         if (is_string($paths)) {
             $paths = func_get_args();
-        }else{
-            $paths = $paths[0];
         }
 
         $this->paths = $paths;
